@@ -8,6 +8,7 @@ import { MatNativeDateModule, NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS }
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar'
+import { MatListModule } from '@angular/material/list'
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { MatToolbarModule } from '@angular/material/toolbar'
     MatNativeDateModule,
     MatCheckboxModule,
     MatSidenavModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatListModule
   ],
   exports: [
     MatButtonModule,
@@ -30,7 +32,8 @@ import { MatToolbarModule } from '@angular/material/toolbar'
     MatNativeDateModule,
     MatCheckboxModule,
     MatSidenavModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatListModule
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },

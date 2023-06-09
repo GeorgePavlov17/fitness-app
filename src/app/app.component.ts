@@ -6,8 +6,8 @@ import { Component, ViewChild } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  @ViewChild('sidenav')
-  onToggle() {
+  // @ViewChild('sidenav')
+  // onToggle() {
 
-  }
+  // }
 }
