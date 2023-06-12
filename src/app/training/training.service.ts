@@ -1,13 +1,16 @@
+import { Timestamp } from '@firebase/firestore-types';
 import { Subject } from "rxjs";
 import { Injectable } from "@angular/core";
 import { Exercise } from "./exercise.model";
-import { map } from 'rxjs/operators'; // Updated import statement
+import { map } from 'rxjs/operators';
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 
 interface ExerciseData {
     name: string;
     duration: number;
     calories: number;
+    date: Timestamp;
+    state: string;
     // add any other properties we have in our Exercise model
   }
 
@@ -15,9 +18,9 @@ interface ExerciseData {
 export class TrainingService {
   exerciseChanged = new Subject<Exercise | null>();
   exercisesChanged = new Subject<Exercise[]>();
+  finishedExercisesChanged = new Subject<Exercise[]>();
   private availableExercises: Exercise[] = [];
   private runningExercise: Exercise | any;
-  private exercises: Exercise[] = [];
 
   constructor(private db: AngularFirestore) {}
 
@@ -69,9 +72,17 @@ export class TrainingService {
         return { ...this.runningExercise };
     }
 
-    getCompletedOrCancelledExercises() {
-        return this.exercises.slice();
+    fetchCompletedOrCancelledExercises() {
+        this.db
+        .collection<Exercise>('finishedExercises')
+        .valueChanges()
+        .subscribe((exercises: Exercise[] | unknown[]) => {
+        const validExercises = exercises as Exercise[]; // Explicitly cast exercises to Exercise[]
+        console.log(validExercises);
+        this.finishedExercisesChanged.next(validExercises);
+        });
     }
+
 
     private addDataToDatabase(exercise: Exercise) {
         this.db.collection('finishedExercises').add(exercise);
