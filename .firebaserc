@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "fitness-app-5fa85": {
+      "hosting": {
+        "fitness-app": [
+          "fitness-app-5fa85"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "fitness-app-5fa85"
+  }
+}
