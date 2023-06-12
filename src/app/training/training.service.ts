@@ -8,7 +8,7 @@ interface ExerciseData {
     name: string;
     duration: number;
     calories: number;
-    // Add any other properties you have in your Exercise model
+    // add any other properties we have in our Exercise model
   }
 
 @Injectable()
@@ -50,13 +50,13 @@ export class TrainingService {
     }
 
     completeExercise() {
-        this.exercises.push({...this.runningExercise, date: new Date(), state: 'completed'});
+        this.addDataToDatabase({...this.runningExercise, date: new Date(), state: 'completed'});
         this.runningExercise = null;
         this.exerciseChanged.next(null);
     }
 
     cancelExercise(progress: number) {
-        this.exercises.push({...this.runningExercise,
+        this.addDataToDatabase({...this.runningExercise,
             duration: this.runningExercise.duration * (progress / 100),
             calories: this.runningExercise.calories * (progress / 100),
             date: new Date(), 
@@ -71,5 +71,9 @@ export class TrainingService {
 
     getCompletedOrCancelledExercises() {
         return this.exercises.slice();
+    }
+
+    private addDataToDatabase(exercise: Exercise) {
+        this.db.collection('finishedExercises').add(exercise);
     }
 }
