@@ -6,6 +6,9 @@ import { map } from 'rxjs/operators';
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { Subscription } from 'rxjs';
 import { UIService } from '../shared/ui.service';
+import * as UI from '../shared/ui.actions';
+import * as fromRoot from '../app.reducer';
+import { Store } from '@ngrx/store';
 
 interface ExerciseData {
     name: string;
@@ -27,11 +30,12 @@ export class TrainingService {
 
   constructor(
     private db: AngularFirestore,
-    private uiService: UIService
+    private uiService: UIService,
+    private store: Store<fromRoot.State>
     ) {}
 
   fetchAvailableExercises() {
-    this.uiService.loadingStateChanged.next(true);
+    this.store.dispatch(new UI.StartLoading());
     this.fbSubs.push(this.db
       .collection('availableExercises')
       .snapshotChanges()
@@ -49,11 +53,11 @@ export class TrainingService {
         })
       )
       .subscribe((exercises: Exercise[]) => {
-        this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch(new UI.StoptLoading());
         this.availableExercises = exercises;
         this.exercisesChanged.next([...this.availableExercises]);
     }, error => {
-      this.uiService.loadingStateChanged.next(false);
+      this.store.dispatch(new UI.StoptLoading());
       this.uiService.showSnackbar('Fetching exercises failed!', '', 3000);
       this.exercisesChanged.next(null!);
     }));
