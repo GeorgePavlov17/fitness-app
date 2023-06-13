@@ -9,7 +9,7 @@ import { CurrentTrainingComponent } from './current-training/current-training.co
 import { NewTrainingComponent } from './new-training/new-training.component';
 import { PastTrainingsComponent } from './past-trainings/past-trainings.component';
 import { StopTrainingComponent } from './current-training/stop-training.component';
-import { FormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
     declarations: [
@@ -20,10 +20,7 @@ import { FormsModule } from '@angular/forms';
         StopTrainingComponent
     ],
     imports: [
-        CommonModule,
-        MaterialModule,
-        FlexLayoutModule,
-        FormsModule,
+        SharedModule,
         AngularFirestoreModule
     ],
     exports: []
