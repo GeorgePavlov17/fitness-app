@@ -27,7 +27,7 @@ import { environment } from 'src/environments/environment.development';
 import { UIService } from './shared/ui.service';
 import { AuthModule } from './auth/auth.module';
 import { StoreModule } from '@ngrx/store';
-import { appReducer } from './app.reducer';
+import { reducers } from './app.reducer';
 
 @NgModule({
   declarations: [
@@ -55,7 +55,7 @@ import { appReducer } from './app.reducer';
     provideRemoteConfig(() => getRemoteConfig()),
     provideStorage(() => getStorage()),
     AngularFireModule.initializeApp(environment.firebase),
-    StoreModule.forRoot({ui: appReducer})
+    StoreModule.forRoot(reducers)
   ],
   providers: [AuthService, TrainingService, ScreenTrackingService,UserTrackingService, UIService],
   bootstrap: [AppComponent]
