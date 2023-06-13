@@ -26,7 +26,6 @@ import { provideStorage,getStorage } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment.development';
 import { UIService } from './shared/ui.service';
 import { AuthModule } from './auth/auth.module';
-import { TrainingModule } from './training/training.module';
 
 @NgModule({
   declarations: [
@@ -41,7 +40,6 @@ import { TrainingModule } from './training/training.module';
     AppRoutingModule,
     FormsModule,
     AuthModule,
-    TrainingModule,
     MaterialModule,
     FlexLayoutModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
