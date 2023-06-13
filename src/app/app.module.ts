@@ -26,6 +26,8 @@ import { provideStorage,getStorage } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment.development';
 import { UIService } from './shared/ui.service';
 import { AuthModule } from './auth/auth.module';
+import { StoreModule } from '@ngrx/store';
+import { appReducer } from './app.reducer';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,7 @@ import { AuthModule } from './auth/auth.module';
     provideRemoteConfig(() => getRemoteConfig()),
     provideStorage(() => getStorage()),
     AngularFireModule.initializeApp(environment.firebase),
+    StoreModule.forRoot({ui: appReducer})
   ],
   providers: [AuthService, TrainingService, ScreenTrackingService,UserTrackingService, UIService],
   bootstrap: [AppComponent]
