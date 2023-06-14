@@ -12,7 +12,7 @@ import * as fromRoot from '../app.reducer';
 export interface TrainingState {
     availableExercises: Exercise[];
     finishedExercises: Exercise[];
-    activeTraining: Exercise[] | null;
+    activeTraining: Exercise;
 }
 
 export interface State extends fromRoot.State {
@@ -22,8 +22,8 @@ export interface State extends fromRoot.State {
 const initialState: TrainingState = {
     availableExercises: [],
     finishedExercises: [],
-    activeTraining: null
-};
+    activeTraining: {} as Exercise
+}
 
 export function trainigReducer(state = initialState, action: TrainingActions) {
     switch (action.type) {
@@ -58,4 +58,5 @@ export const getTrainingState = createFeatureSelector<TrainingState>('training')
 
 export const getAvailableExercises = createSelector(getTrainingState, (state: TrainingState) => state.availableExercises);
 export const getFinishedExercises = createSelector(getTrainingState, (state: TrainingState) => state.finishedExercises);
-export const getActiveTraining = createSelector(getTrainingState, (state: TrainingState) => state.activeTraining);
+export const getActiveTraining = createSelector(getTrainingState,(state: TrainingState) => (state.activeTraining ? [state.activeTraining] : []));
+export const getIsTraining = createSelector(getTrainingState, (state: TrainingState) => state.activeTraining != null);
