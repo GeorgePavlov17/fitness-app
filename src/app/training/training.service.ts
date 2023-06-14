@@ -7,7 +7,8 @@ import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { Subscription } from 'rxjs';
 import { UIService } from '../shared/ui.service';
 import * as UI from '../shared/ui.actions';
-import * as fromRoot from '../app.reducer';
+import * as fromTraining from '../training/training.reducer';
+import * as Training from '../training/training.actions';
 import { Store } from '@ngrx/store';
 
 interface ExerciseData {
@@ -31,7 +32,7 @@ export class TrainingService {
   constructor(
     private db: AngularFirestore,
     private uiService: UIService,
-    private store: Store<fromRoot.State>
+    private store: Store<fromTraining.State>
     ) {}
 
   fetchAvailableExercises() {
@@ -54,6 +55,7 @@ export class TrainingService {
       )
       .subscribe((exercises: Exercise[]) => {
         this.store.dispatch(new UI.StoptLoading());
+        this.store.dispatch(new Training.SetAvailableTrainings(exercises));
         this.availableExercises = exercises;
         this.exercisesChanged.next([...this.availableExercises]);
     }, error => {
@@ -64,9 +66,7 @@ export class TrainingService {
   }
 
     startExercise(selectedId: string) {
-        // this.db.doc('availableExercises/' + selectedId).update({lastSelected: new Date()})
-        this.runningExercise = this.availableExercises.find(ex => ex.id === selectedId);
-        this.exerciseChanged.next({ ...this.runningExercise });
+        this.store.dispatch(new Training.StartTraining(selectedId))
     }
 
     completeExercise() {
@@ -81,8 +81,7 @@ export class TrainingService {
             calories: this.runningExercise.calories * (progress / 100),
             date: new Date(), 
             state: 'cancelled'});
-        this.runningExercise = null;
-        this.exerciseChanged.next(null);
+       this.store.dispatch(new Training.StopTraining());
     }
 
     getRunningExercise() {
@@ -90,14 +89,14 @@ export class TrainingService {
     }
 
     fetchCompletedOrCancelledExercises() {
-        this.fbSubs.push(this.db
-        .collection<Exercise>('finishedExercises')
-        .valueChanges()
-        .subscribe((exercises: Exercise[] | unknown[]) => {
-        const validExercises = exercises as Exercise[]; // Explicitly cast exercises to Exercise[]
-        console.log(validExercises);
-        this.finishedExercisesChanged.next(validExercises);
-        }));
+      this.fbSubs.push(
+        this.db
+          .collection<Exercise>('finishedExercises')
+          .valueChanges()
+          .subscribe((exercises: Exercise[]) => { // Update the type to Exercise[]
+            this.store.dispatch(new Training.SetFinishedTrainings(exercises));
+          })
+      );
     }
 
     cancelSubscriptions() {
